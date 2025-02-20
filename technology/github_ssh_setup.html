@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>SSH Keys</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="ssh-keys">SSH Keys</h1>
+<p><em>The following guide is a part of CSCE 221 (taught by Teresa Leyk) setup.</em></p>
+<p>The Secure Shell protocol (SSH) is a cryptographic network protocol for ensuring security over network operations. Github uses SSH keys for authorization.</p>
+<p>To download assignments, we will be utilizing the <code>clone</code> command of <code>git</code>.</p>
+<pre><code class="language-sh">git <span class="hljs-built_in">clone</span> &lt;url&gt;
+</code></pre>
+<p>Github defaults to an <code>HTTPS</code> repository url. We instead want the <code>SSH</code> protocol so click on it.</p>
+<img src="assets/github-4.png" alt="logo" width="400" align="center">
+<p>We will use <code>SSH</code> in this course, but first we have to setup public keys on our local machine.</p>
+<p>If you attempt to clone now, you would see an error:</p>
+<pre><code class="language-sh">git <span class="hljs-built_in">clone</span> git@github.com:tamu-edu-students/leyk-csce221-setup-hello-world.git
+</code></pre>
+<pre><code class="language-shell">Cloning into &#x27;leyk-csce221-setup-hello-world&#x27;...
+ERROR: The `tamu-edu-students&#x27; organization has enabled or enforced SAML SSO. To access this repository, you must use the HTTPS remote with a personal access token or SSH with an SSH key and passphrase that has been authorized for this organization. Visit https://docs.github.com/articles/authenticating-to-a-github-organization-with-saml-single-sign-on/ for more information.
+
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+</code></pre>
+<h2 id="generating-a-new-ssh-key">Generating a new SSH key</h2>
+<p>SSH keys can be easily generated through the <code>ssh-keygen</code> program</p>
+<ol>
+<li>Open any Terminal (Terminal on macOS, WSL on Windows).</li>
+<li>Paste the text below, <strong>SUBSTITUTING</strong> in your GitHub address for &quot;your_email&quot;. <strong>Do not include quotation marks around your email address</strong>.</li>
+</ol>
+<pre><code class="language-sh">ssh-keygen -t ed25519 -C your_email@tamu.edu
+</code></pre>
+<p>This creates a new SSH key, using the provided email as a label.</p>
+<pre><code class="language-shell"><span class="hljs-meta prompt_">&gt; </span><span class="language-bash">Generating public/private algorithm key pair.</span>
+</code></pre>
+<ol start="3">
+<li>When you're prompted to &quot;Enter a file in which to save the key,&quot; press Enter. This accepts the default file location.</li>
+<li>At the prompt, type a secure passphrase (or don't by simply pressing Enter 😊).</li>
+</ol>
+<pre><code class="language-shell"><span class="hljs-meta prompt_">&gt; </span><span class="language-bash">Enter passphrase (empty <span class="hljs-keyword">for</span> no passphrase): [Type a passphrase]</span>
+<span class="hljs-meta prompt_">&gt; </span><span class="language-bash">Enter same passphrase again: [Type passphrase again]</span>
+</code></pre>
+<h2 id="adding-a-new-ssh-key-to-your-github-account">Adding a new SSH key to your GitHub account</h2>
+<ol>
+<li>Copy the SSH public key to your clipboard. If your SSH public key file has a different name than the example code, modify the filename to match your current setup. When copying your key, don't add any newlines or whitespace. <strong>Manually</strong> copy paste the output of the command below.</li>
+</ol>
+<pre><code class="language-sh"><span class="hljs-built_in">cat</span> ~/.ssh/id_ed25519.pub
+</code></pre>
+<pre><code class="language-shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">Copy the ENTIRE output</span>
+<span class="hljs-meta prompt_"># </span><span class="language-bash">Output Format : ssh-ed25519 &lt;public-key&gt; &lt;email&gt;</span>
+<span class="hljs-meta prompt_"># </span><span class="language-bash">Output Example: ssh-ed25519    🔑🔑🔑   JosephJoestar@gmail.com</span> 
+</code></pre>
+<ol start="2">
+<li>Navigate to settings in your Github account and click &quot;New SSH Key&quot;</li>
+</ol>
+<img src="assets/github-5.png" alt="logo" width="" align="center">
+<ol start="3">
+<li>Choose a descriptive title</li>
+<li>Paste your key into the &quot;Key&quot; field</li>
+<li>Click <strong>Add SSH key</strong></li>
+</ol>
+
+            
+            
+        </body>
+        </html>
